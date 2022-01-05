@@ -1,4 +1,8 @@
-.danger {
+.static {
+	font-size: 2em;
+}
+
+.text-danger {
 	color: red;
 }
 
