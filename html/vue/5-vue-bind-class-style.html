@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- CSS 多个link会以排在最后为最终的样式 rel都是stylesheet -->
+		<link rel="stylesheet" href="../../css/style.css">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<div>
+				<!-- same Vue.component -->
+				<p class="static" v-bind:class="{ container: isActive, 'text-danger': hasError }">Oops1!</p>
+				<p class="static" :class="classObject">Oops2!</p>
+				<p class="static" :class="computedClass">Oops3!</p>
+				<p class="static" :class="['container', 'text-danger']">Oops4!</p>
+				<p class="static" :class="[ isActive ? 'container' : '', textDanger]">Oops5!</p>
+				<p class="static" :class="[{ container: isActive }, textDanger]">Oops6!</p>
+			</div>
+			<div>
+				<p v-bind:style="{ color: 'green', 'font-size': 10 + 'px' }">Oops7!</p>
+				<p :style="{ color: styleColor, 'font-size': fontSize + 'px' }">Oops8!</p>
+				<p :style="styleObject">Oops9!</p>
+				<p :style="[styleObject, overridingStyle]">Oops10!</p>
+				<p :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">Oops11!</p>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			var vm  = new Vue({
+				el: '#app',
+				data: {
+					isActive: true,
+					hasError: true,
+					classObject: {
+						container: true,
+						'text-danger': true
+					},
+					textDanger: 'text-danger',
+					styleColor: 'green',
+					fontSize: 20,
+					styleObject: {
+						color: 'gray',
+						fontSize: '30px'
+					},
+					overridingStyle: {
+						color: 'Blue',
+						fontSize: '40px'
+					}
+				},
+				computed: {
+					computedClass: function() {
+						return {
+							container: this.isActive,
+							'text-danger': this.hasError
+						}
+					}
+				}
+			});
+		</script>
+	</body>
+</html>
