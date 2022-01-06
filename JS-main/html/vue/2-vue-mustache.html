@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<p><span v-once>Message: {{ msg }}</span></p>
+			
+			<p><span>RawHtml: {{ rawHtml }}</span></p>
+			<p><span v-html="rawHtml"></span></p>
+			
+			<button v-bind:disabled="isButtonDisabled">v-bind replace mustache on attribute</button>
+
+			<!-- Math Date -->
+			<p>{{ single.split('').reverse().join('') }}</p>
+			<p><span v-bind:style="'color:' + color">不能添加声明和控制流</span></p>
+			
+			<p><a v-bind:[da]="urld" style="text-decoration: none;">动态参数，不能有引号或null并小写</a></p>
+			
+			<p><a :[da]="urls" style="text-decoration: none;">缩写 v-bind => : v-click => @</a></p>
+		</div>
+		<!-- Vue2.x -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			var vm =  new Vue({
+				el: '#app',
+				data: {
+					msg: 'mustache render one time',
+					rawHtml: '<span style="color: red">mustache rawHtml XSS<span>',
+					isButtonDisabled: false,
+					single: '单条语句',
+					color: 'red',
+					da: 'href',
+					urld: 'https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0x',
+					urls: 'https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99'
+				}
+			});
+		</script>
+	</body>
+</html>
