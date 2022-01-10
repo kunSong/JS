@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<!-- 只会捕获自己触发的事件，而不是子元素 -->
+		<div id="app" v-on:click.capture.self="appGreet">
+			<div>
+				<button v-on:click="counter += 1">Add</button>
+				<p>{{ 'counter: ' + counter }}</p>
+			</div>
+			<div>
+				<button v-on:click="greet">greet</button>
+			</div>
+			<div>
+				<button v-on:click="say('hi')">Say hi</button>
+				<button v-on:click="say('what')">Say what</button>
+			</div>
+			<div>
+				<!-- 原生 DOM 事件 -->
+				<button v-on:click="warn('Form cannot be submitted yet.', $event)">warn</button>
+			</div>
+			<div>
+				<button v-on:click.stop="greet">click.stop</button>
+			</div>
+			<!-- <div v-on:scorll.passive="onScorll"></div> -->
+			<div v-on:click="appChildGreet">
+				<!-- prevent 如果标签本身有默认行为，会被阻止，比如button submit行为会被阻止 -->
+				<button v-on:click.prevent="greetBubble">Greet</button>
+			</div>
+			<div>
+				enter: <input v-on:keyup.enter="onKey"><br/>
+				<!-- 任意有效按键名 可替换为 a z b等 -->
+				page-down: <input v-on:keyup.page-down="onKey"><br/>
+				z: <input v-on:keyup.z="onKey"><br/>
+				<button v-on:keyup.alt.67="onKey">alt + c</button><br/>
+				<button v-on:click="onKey">alt shift click</button><br/>
+				<button v-on:click.ctrl.exact="onKey">only ctrl </button>
+				<button v-on:click.exact="onKey">none key down click</button>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					counter: 0,
+					name: 'songkun'
+				},
+				methods: {
+					greet: function(event) {
+						alert('Hello ' + this.name);
+						if(event) {
+							alert(event.target.tagName);
+						}
+					},
+					say: function(message) {
+						alert(message);
+					},
+					warn: function(message, event) {
+						if(event) {
+							event.preventDefault();
+						}
+						alert(message);
+					},
+					appGreet: function(event) {
+						alert("app " + event.eventPhase);
+					},
+					appChildGreet: function(event) {
+						alert("appChild " + event.eventPhase);
+					},
+					greetBubble: function(event) {
+						alert("button " + event.eventPhase);
+					},
+					onKey: function(event) {
+						alert("key " + event.keyCode);
+					}
+				}
+			});
+			// DOM2事件处理 addEventListener第3个参数为在捕获1or冒泡3，元素处理2evettPhase
+			// Vue和JS原生混编，要放在Vue之后
+			// var app = document.getElementById("app");
+			// var appchild = document.getElementById("app-child");
+			// var button = document.getElementById("button");
+			// app.addEventListener('click', function(event) {
+			// 	alert("app native " + event.eventPhase);
+			// }, true);
+			// appchild.addEventListener('click', function(event) {
+			// 	alert("app-child native " + event.eventPhase);
+			// }, false);
+			// button.addEventListener('click', function(event) {
+			// 	alert("button native" + event.eventPhase);
+			// }, false);
+		</script>
+	</body>
+</html>
