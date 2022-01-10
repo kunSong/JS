@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="my-button">
+			<!-- only kebab-case -->
+			<my-button v-bind:[d]="name"></my-button>
+			<my-button></my-button>
+			<my-button></my-button>
+		</div>
+		<div id="blog-post">
+			<div v-bind:style="{ fontSize: contentSize + 'px' }">
+				<blog-post 
+					v-bind:post="blog" 
+					v-on:enlarge-text="contentSize += 10"
+					v-on:reduce-text="reduceText">
+				</blog-post>
+			</div>
+		</div>
+		<div id="input-content">
+			<!-- v-model on component => v-bind:value="searchTexxt" v-on:input="searchText = $event" -->
+			<input-content v-bind:content="searchText" v-model="searchText"></input-content>
+			<p>{{ searchText }}</p>
+		</div>
+		<div id="alert-box">
+			<alert-box>Oops!</alert-box>
+		</div>
+		<div id="switch-component">
+			<!-- v-for中迭代的tab可以在这个button标签的作用域中获取 -->
+			<button v-for="tab in tabs" v-bind:key="tab.name" v-on:click="currentTab = tab.component">{{ tab.name }}</button>
+			<!-- 双引号里套单引号才可以被判断为字符串类型 -->
+			<component v-bind:is="currentTab" v-bind:post="blog">Oops!</component>
+		</div>
+		<div id="limit">
+			<table>
+				<!-- <blog-post v-bind:post="blog"></blog-post> -->
+				<!-- <tr is="blog-post-row"></tr> -->
+			</table>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script>
+			Vue.component('my-button', {
+				data: function() {
+					return {
+						counter: 0
+					}
+				},
+				// custom attribute for camal-case
+				props: ['titleName'],
+				template: `
+					<div>
+						<button v-on:click="counter += 1">{{ titleName }} Button {{ counter}}</button>
+					</div>
+				`
+			});
+			Vue.component('blog-post', {
+				props: ['post'],
+				// need one root element
+				// $emit 产生自定义事件
+				template: `
+					<div>
+						<h3>{{ post.title }}</h3>
+						<p>{{ post.author }}</p>
+						<p v-html="post.content"></p>
+						<p>{{ post.publishTime() }}</p>
+						<p>{{ post.comments }}</p>
+						<button v-on:click="$emit('enlarge-text')">Enlarge Text</button>
+						<button v-on:click="$emit('reduce-text', 10)">Reduce Text</button>
+					</div>
+				`
+			});
+			Vue.component('input-content', {
+				props: ['content'],
+				template: `
+					<div>
+						<input type="text" v-bind:value="content" v-on:input="$emit('input', $event.target.value)">
+					</div>
+				`
+			});
+			Vue.component('alert-box', {
+				template: `
+					<div class="alert-box">
+						<strong>Error!</strong>
+						<slot></slot>
+					</div>
+				`
+			});
+			new Vue({
+				el: '#my-button',
+				data: {
+					name: 'songkun',
+					d: 'title-name'
+				}
+			});
+			new Vue({
+				el: '#blog-post',
+				data: {
+					blog: {
+						title: 'Javascript高级程序设计',
+						author: 'Matt',
+						content: '<span style="font-size: 20px">变量，面向对象，原型继承，事件，垃圾回收</span>',
+						publishTime: function() {
+							return Date.now();
+						},
+						comments: 'Nice!'
+					},
+					contentSize: 20
+				},
+				methods: {
+					reduceText: function(reduceAmount) {
+						this.contentSize -= reduceAmount;
+					}
+				}
+			});
+			new Vue({
+				el: '#input-content',
+				data: {
+					searchText: ''
+				}
+			})
+			new Vue({
+				el: '#alert-box'
+			})
+			new Vue({
+				el: '#limit',
+				data: {
+					blog: {
+						title: 'Javascript高级程序设计',
+						author: 'Matt',
+						content: '<span style="font-size: 20px">变量，面向对象，原型继承，事件，垃圾回收</span>',
+						publishTime: function() {
+							return Date.now();
+						},
+						comments: 'Nice!'
+					}
+				}
+			})
+			var tabs = [
+				{
+					name: 'CustomButton',
+					component: 'my-button'
+				},
+				{
+					name: 'BlogPost',
+					component: 'blog-post'
+				},
+				{
+					name: 'CustomInput',
+					component: 'input-content'
+				},
+				{
+					name: 'AlertBox',
+					component: 'alert-box'
+				}
+			]
+			new Vue({
+				el: '#switch-component',
+				data: {
+					currentTab: 'my-button',
+					tabs: tabs,
+					blog: {
+						title: 'Javascript高级程序设计',
+						author: 'Matt',
+						content: '<span style="font-size: 20px">变量，面向对象，原型继承，事件，垃圾回收</span>',
+						publishTime: function() {
+							return Date.now();
+						},
+						comments: 'Nice!'
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

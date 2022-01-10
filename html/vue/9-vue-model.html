@@ -10,7 +10,10 @@
 			<!-- ignore value checked selected, init from data -->
 			<!-- text: value;input, checkbox: checked;change, select: value;change -->
 			<div>
-				<input v-model="message" placeholder="edit me">
+				<!-- .lazy when enter event traggle then sync message value-->
+				<!-- .number when input is a number will transform to number default is string -->
+				<!-- .trim remove white space -->
+				<input v-model.lazy.number.trim="message" placeholder="edit me">
 				<p>message: {{ message }}</p>
 			</div>
 			<div>
@@ -20,16 +23,54 @@
 				<textarea v-model="message" placeholder="add multiple lines"></textarea>
 			</div>
 			<div>
-				<input type="checkbox" id="checkbox" v-model="checkboxval" />
+				<!-- <input type="checkbox" id="checkbox" v-model="checkboxval" true-value="yes" false-value="no"> -->
+				<input type="checkbox" id="checkbox" v-model="checkboxval" v-bind:true-value="a" v-bind:false-value="b">
 				<label for="checkbox">{{ checkboxval }}</label>
-				<br>
-				<input type="checkbox" id="songkun" value="songkun" v-model="family"/>
+			</div>
+			<div>
+				<input type="checkbox" id="songkun" value="songkun" v-model="family">
 				<label for="songkun">songkun</label>
-				<input type="checkbox" id="chenhuihui" value="chenhuihui" v-model="family"/>
+				<input type="checkbox" id="chenhuihui" value="chenhuihui" v-model="family">
 				<label for="chenhuihui">chenhuihui</label>
-				<input type="checkbox" id="songchenyan" value="songchenyan" v-model="family"/>
+				<input type="checkbox" id="songchenyan" value="songchenyan" v-model="family">
 				<label for="songchenyan">songchenyan</label>
-				<p v-for="member in family">{{ member }}</p>
+				<br>
+				<span>{{ family }}</span>
+				<!-- <p v-for="member in family">{{ member }}</p> -->
+			</div>
+			<div>
+				<input type="radio" id="songkun" value="songkun" v-model="radioChecked">
+				<label for="songkun">songkun</label>
+				<input type="radio" id="songchenyan" value="songchenyan" v-model="radioChecked">
+				<label for="songchenyan">songchenyan</label>
+				<br>
+				<span>{{ radioChecked }}</span>
+			</div>
+			<div>
+				<select v-model="singleSelect">
+					<option disabled >select</option>
+					<option>A</option>
+					<option>B</option>
+					<option>C</option>
+				</select>
+				<br>
+				<span>{{ singleSelect }}</span>
+			</div>
+			<div>
+				<select v-model="multiSelect" multiple style="width: 50px">
+					<option v-bind:value="{ name: 'songkun' }">A</option>
+					<option v-bind:value="{ name: 'chenhuihui' }">B</option>
+					<option v-bind:value="{ name: 'songchenyan' }">C</option>
+				</select>
+				<br>
+				<span v-for="item in multiSelect" v-bind:key="item.name">{{ item.name }}</span>
+			</div>
+			<div>
+				<select v-model="singleSelect">
+					<option v-for="word in words">{{ word }}</option>
+				</select>
+				<br>
+				<span>{{ singleSelect }}</span>
 			</div>
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -40,7 +81,15 @@
 					message: '',
 					multimessage: '',
 					checkboxval: false,
-					family: []
+					family: [],
+					radioChecked: '',
+					singleSelect: '',
+					multiSelect: [],
+					words: ['lazy', 'number', 'trim'],
+					a: 'yes',
+					b: 'no',
+					optionFamily: ['songkun'],
+					inlineName: { name: 'songkun' }
 				}
 			});
 		</script>
